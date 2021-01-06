@@ -1,22 +1,24 @@
 import subprocess
+from colorutils import Color
 
 
 class LightChanger:
 
-
-#have a path to the C3 executable
- #   have a function that takes a color(can get RGB values from it) and passes that to the exec as args
- #   overridde the color change fucntion to take raw RGB values
-
-   # havee a set yellow
-   # have a set green
-   # have a set red fucntion for clarity
-
     exec_path = "C:/Users/grego/workspace/exec-assistant/C#/MSI-Mystic-Light-Controller/SetLEDsGreen/Deployment/netcoreapp3.1/SetLEDsGreen.exe"
+    RED = Color((255, 0, 0))
+    GREEN = Color((0, 255, 0))
+    YELLOW = Color((255, 255, 0))
 
-   #def __init__(self):
-   #     self.command = exec_""
+    def set_green(self):
+        return self.set_color(self.GREEN)
+
+    def set_red(self):
+        return self.set_color(self.RED)
 
     def set_yellow(self):
-        command = self.exec_path + " 255 255 0"
+        return self.set_color(self.YELLOW)
+
+    def set_color(self, color):
+        color_args = " " + str(color.red) + " " + str(color.green) + " " + str(color.blue)
+        command = self.exec_path + color_args
         return subprocess.call(args=command)
