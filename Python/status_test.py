@@ -1,5 +1,7 @@
 import unittest
+from mock import patch
 from . import status
+from . import light_changer
 
 
 class MyTestCase(unittest.TestCase):
@@ -8,22 +10,28 @@ class MyTestCase(unittest.TestCase):
 
     def test_status_inits_to_free(self):
         self.assertEqual(self.subject.current(), "Free")
+        self.assertIsInstance(self.subject.changer, light_changer.LightChanger)
 
     def test_status_changes_to_Interruptable(self):
-        self.subject.set_interruptable()
+        with patch.object(self.subject.changer, 'set_yellow') as mock:
+            self.subject.set_interruptable()
+            mock.assert_called_once()
 
         self.assertEqual(self.subject.current(), "Interrupt-able")
 
     def test_status_changes_to_Busy(self):
-        self.subject.set_busy()
+        with patch.object(self.subject.changer, 'set_red') as mock:
+            self.subject.set_busy()
+            mock.assert_called_once()
 
         self.assertEqual(self.subject.current(), "Busy")
 
     def test_status_changes_back_to_Free(self):
         self.subject.set_busy()
         self.assertEqual(self.subject.current(), "Busy")
-
-        self.subject.set_free()
+        with patch.object(self.subject.changer, 'set_green') as mock:
+            self.subject.set_free()
+            mock.assert_called_once()
 
         self.assertEqual(self.subject.current(), "Free")
 
